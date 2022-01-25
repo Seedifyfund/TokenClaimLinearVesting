@@ -122,7 +122,7 @@ library SafeERC20 {
         address to,
         uint256 value
     ) internal {
-        require(token.transfer(to, value));
+        require(token.transfer(to, value), "SafeERC20: Transfer failed");
     }
 
     function safeTransferFrom(
@@ -131,17 +131,20 @@ library SafeERC20 {
         address to,
         uint256 value
     ) internal {
-        require(token.transferFrom(from, to, value));
+        require(
+            token.transferFrom(from, to, value),
+            "SafeERC20: Transfer from failed"
+        );
     }
 }
 
 contract TokenClaim is Ownable, Pausable {
     using SafeERC20 for IERC20;
 
-    address public tokenAddress;
+    address public immutable tokenAddress;
     uint256 public totalVested;
     uint256 public totalClaimed;
-    IERC20 public ERC20Interface;
+    IERC20 public immutable ERC20Interface;
 
     struct Vesting {
         uint256 totalAmount;
